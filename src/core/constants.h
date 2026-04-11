@@ -8,6 +8,12 @@ namespace config {
     constexpr unsigned int WINDOW_HEIGHT = 600;
     constexpr unsigned int WINDOW_WIDTH = 800;
     const std::string WINDOW_TITLE = "Particle Life";
+
+    constexpr float GRAVITY = 500.0f;
+    constexpr float RESTITUTION = 0.8f;
+    constexpr float AIR_FRICTION = 2.0f;
+    constexpr float SLIDE_FRICTION = 40.0f;
+    constexpr float VELOCITY_X_THRESHOLD = 1.0f;
 }
 
 #endif //PARTICLELIFE_CONSTANTS_H

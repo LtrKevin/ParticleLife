@@ -22,6 +22,7 @@ add_executable(ParticleLife main.cpp
         src/entities/Particle.cpp
         src/entities/Particle.h
         src/entities/Particle.h
-        src/core/constants.h)
+        src/core/constants.h
+        src/core/physics.h)
 
 target_link_libraries(ParticleLife SFML::Graphics SFML::Window SFML::System)

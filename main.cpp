@@ -5,9 +5,10 @@
 #include "cmake-build-debug/_deps/sfml-src/src/SFML/Window/InputImpl.hpp"
 #include "src/entities/particle.h"
 #include "src/core/constants.h"
+#include "src/core/physics.h"
 
 int main() {
-    std::vector<std::unique_ptr<particle>> particles;
+    std::vector<std::unique_ptr<Particle>> particles;
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<> dis(-200, 200);
@@ -23,7 +24,7 @@ int main() {
             if (event->is<sf::Event::Closed>()) window.close();
 
             if (event->is<sf::Event::MouseButtonPressed>()) {
-                particles.push_back(std::make_unique<particle>(sf::Vector2f(
+                auto& particle = particles.emplace_back(std::make_unique<Particle>(sf::Vector2f(
                     sf::Mouse::getPosition(window)),
                     sf::Vector2f(dis(gen), dis(gen)),
                     10.0));
@@ -36,6 +37,8 @@ int main() {
 
         for (const auto& p : particles) {
             window.draw(p->getShape());
+            p->applyForce(forces::computeGravity(*p));
+            p->applyForce(forces::computeAirFriction(*p));
             p->update(dt);
         }
 
