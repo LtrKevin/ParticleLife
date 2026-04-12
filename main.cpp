@@ -23,7 +23,7 @@ int main() {
 
             if (event->is<sf::Event::Closed>()) window.close();
 
-            if (event->is<sf::Event::MouseButtonPressed>()) {
+            if (event->is<sf::Event::KeyPressed>()) {
                 auto& particle = particles.emplace_back(std::make_unique<Particle>(sf::Vector2f(
                     sf::Mouse::getPosition(window)),
                     sf::Vector2f(dis(gen), dis(gen)),
@@ -35,10 +35,33 @@ int main() {
 
         window.clear();
 
+        if (!particles.empty()) {
+            for (int i = 0; i < particles.size() - 1; i++) {
+                for (int j = i + 1; j < particles.size() - 1; j++) {
+                    const auto& particle_i = particles.at(i);
+                    const auto& particle_j = particles.at(j);
+
+                    if ((particle_i->getPosition() - particle_j->getPosition()).lengthSquared()
+                        <= pow(particle_i->getShape().getRadius(), 2) + pow(particle_j->getShape().getRadius(), 2)) {
+                        //TODO: Implement collision
+                    }
+                }
+            }
+        }
+
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+            for (const auto& particle : particles) {
+                particle->applyForce(forces::computeMouseAttraction(
+                    particle->getMass(),
+                    window.mapPixelToCoords(sf::Mouse::getPosition(window)) - particle->getPosition()
+                ));
+            }
+        }
+
         for (const auto& p : particles) {
             window.draw(p->getShape());
-            p->applyForce(forces::computeGravity(*p));
-            p->applyForce(forces::computeAirFriction(*p));
+            p->applyForce(forces::computeGravity(p->getMass()));
+            p->applyForce(forces::computeAirFriction(p->getVelocity()));
             p->update(dt);
         }
 
