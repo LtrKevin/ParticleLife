@@ -16,7 +16,7 @@ namespace forces {
     }
 
     inline sf::Vector2f computeMouseAttraction(const float mass, const sf::Vector2f& distance) {
-        return {0,0}; //TODO Implement mouse attraction
+        return {0,0}; //TODO: Implement mouse attraction
     }
 }
 

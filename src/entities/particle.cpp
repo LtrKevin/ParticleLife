@@ -13,7 +13,7 @@ Particle::Particle(
     shape_.setFillColor(sf::Color::White);
     shape_.setOrigin(sf::Vector2f(radius, radius));
 
-    mass_ = std::pow(radius, 2);
+    mass_ = radius*radius;
     forceAccumulator_ = {0, 0};
 }
 

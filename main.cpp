@@ -41,8 +41,11 @@ int main() {
                     const auto& particle_i = particles.at(i);
                     const auto& particle_j = particles.at(j);
 
-                    if ((particle_i->getPosition() - particle_j->getPosition()).lengthSquared()
-                        <= pow(particle_i->getShape().getRadius(), 2) + pow(particle_j->getShape().getRadius(), 2)) {
+                    const float distanceSquared = (particle_i->getPosition() - particle_j->getPosition()).lengthSquared();
+                    const float particleIRadiusSquared = particle_i->getShape().getRadius() * particle_i->getShape().getRadius();
+                    const float particleJRadiusSquared = particle_j->getShape().getRadius() * particle_j->getShape().getRadius();
+
+                    if (distanceSquared <= particleIRadiusSquared * particleJRadiusSquared) {
                         //TODO: Implement collision
                     }
                 }
@@ -58,11 +61,11 @@ int main() {
             }
         }
 
-        for (const auto& p : particles) {
-            window.draw(p->getShape());
-            p->applyForce(forces::computeGravity(p->getMass()));
-            p->applyForce(forces::computeAirFriction(p->getVelocity()));
-            p->update(dt);
+        for (const auto& particle : particles) {
+            window.draw(particle->getShape());
+            particle->applyForce(forces::computeGravity(particle->getMass()));
+            particle->applyForce(forces::computeAirFriction(particle->getVelocity()));
+            particle->update(dt);
         }
 
         window.display();
