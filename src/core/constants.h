@@ -16,6 +16,8 @@ namespace config {
     constexpr float VELOCITY_X_THRESHOLD = 1.0f;
     constexpr float GRAVITATIONAL_CONSTANT = 10.0f;
     constexpr float MOUSE_MASS = 100000.0f;
+
+    inline bool earthMode = true;
 }
 
 #endif //PARTICLELIFE_CONSTANTS_H

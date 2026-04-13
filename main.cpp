@@ -23,11 +23,20 @@ int main() {
 
             if (event->is<sf::Event::Closed>()) window.close();
 
-            if (event->is<sf::Event::KeyPressed>()) {
-                auto& particle = particles.emplace_back(std::make_unique<Particle>(sf::Vector2f(
-                    sf::Mouse::getPosition(window)),
-                    sf::Vector2f(dis(gen), dis(gen)),
-                    12.0));
+            if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
+                if (keyPressed->code == sf::Keyboard::Key::G) {
+                    config::earthMode = !config::earthMode;
+                    std::cout << "Mode terre : " << config::earthMode << std::endl;
+                } else if (keyPressed->code == sf::Keyboard::Key::R) {
+                    std::cout << "Suppression des particules ..." << std::endl;
+                    particles.clear();
+                } else if (keyPressed->code == sf::Keyboard::Key::Space) {
+                    auto& particle = particles.emplace_back(std::make_unique<Particle>(sf::Vector2f(
+                        sf::Mouse::getPosition(window)),
+                        sf::Vector2f(dis(gen), dis(gen)),
+                        12.0
+                    ));
+                }
             }
         }
 
@@ -73,8 +82,12 @@ int main() {
 
         for (const auto& particle : particles) {
             window.draw(particle->getShape());
-            particle->applyForce(forces::computeGravity(particle->getMass()));
-            particle->applyForce(forces::computeAirFriction(particle->getVelocity()));
+
+            if (config::earthMode) {
+                particle->applyForce(forces::computeGravity(particle->getMass()));
+                particle->applyForce(forces::computeAirFriction(particle->getVelocity()));
+            }
+
             particle->update(dt);
         }
 
