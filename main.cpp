@@ -27,7 +27,7 @@ int main() {
                 auto& particle = particles.emplace_back(std::make_unique<Particle>(sf::Vector2f(
                     sf::Mouse::getPosition(window)),
                     sf::Vector2f(dis(gen), dis(gen)),
-                    10.0));
+                    12.0));
             }
         }
 
@@ -36,17 +36,27 @@ int main() {
         window.clear();
 
         if (!particles.empty()) {
-            for (int i = 0; i < particles.size() - 1; i++) {
-                for (int j = i + 1; j < particles.size() - 1; j++) {
+            for (int i = 0; i < particles.size(); i++) {
+                for (int j = i + 1; j < particles.size(); j++) {
                     const auto& particle_i = particles.at(i);
                     const auto& particle_j = particles.at(j);
 
                     const float distanceSquared = (particle_i->getPosition() - particle_j->getPosition()).lengthSquared();
-                    const float particleIRadiusSquared = particle_i->getShape().getRadius() * particle_i->getShape().getRadius();
-                    const float particleJRadiusSquared = particle_j->getShape().getRadius() * particle_j->getShape().getRadius();
+                    const float particleIJRadiusSquared = (particle_i->getShape().getRadius() + particle_j->getShape().getRadius()) * (particle_i->getShape().getRadius() + particle_j->getShape().getRadius());
 
-                    if (distanceSquared <= particleIRadiusSquared * particleJRadiusSquared) {
-                        //TODO: Implement collision
+                    if (distanceSquared <= particleIJRadiusSquared) {
+                        if (distanceSquared == 0) continue;
+
+                        const auto collisionSpeed = forces::computeCollisionImpulsion(
+                            particle_i->getPosition() - particle_j->getPosition(),
+                            particle_i->getMass(),
+                            particle_i->getVelocity(),
+                            particle_j->getMass(),
+                            particle_j->getVelocity()
+                        );
+
+                        particle_i->setVelocity(particle_i->getVelocity() + collisionSpeed/particle_i->getMass());
+                        particle_j->setVelocity(particle_j->getVelocity() - collisionSpeed/particle_j->getMass());
                     }
                 }
             }

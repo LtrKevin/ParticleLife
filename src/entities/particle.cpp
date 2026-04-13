@@ -50,6 +50,10 @@ void Particle::update(const float dt) {
     forceAccumulator_ = {0, 0};
 }
 
+void Particle::setVelocity(const sf::Vector2f velocity) {
+    velocity_ = velocity;
+}
+
 sf::Vector2f Particle::getPosition() const {
     return position_;
 }

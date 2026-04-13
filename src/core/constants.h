@@ -5,8 +5,8 @@
 #include <string>
 
 namespace config {
-    constexpr unsigned int WINDOW_HEIGHT = 600;
-    constexpr unsigned int WINDOW_WIDTH = 800;
+    constexpr unsigned int WINDOW_HEIGHT = 720;
+    constexpr unsigned int WINDOW_WIDTH = 1280;
     const std::string WINDOW_TITLE = "Particle Life";
 
     constexpr float GRAVITY = 500.0f;
