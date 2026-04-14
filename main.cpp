@@ -74,8 +74,9 @@ int main() {
         if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
             for (const auto& particle : particles) {
                 particle->applyForce(forces::computeMouseAttraction(
-                    particle->getMass(),
-                    window.mapPixelToCoords(sf::Mouse::getPosition(window)) - particle->getPosition()
+                    window.mapPixelToCoords(sf::Mouse::getPosition(window)) - particle->getPosition(),
+                    particle->getVelocity(),
+                    particle->getMass()
                 ));
             }
         }

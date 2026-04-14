@@ -1,6 +1,7 @@
 #ifndef PARTICLELIFE_PHYSICS_H
 #define PARTICLELIFE_PHYSICS_H
 
+#include <cmath>
 #include "SFML/System/Vector2.hpp"
 #include "constants.h"
 
@@ -11,12 +12,15 @@ namespace forces {
         return {0, mass * config::GRAVITY};
     }
 
-    inline sf::Vector2f computeAirFriction(const sf::Vector2f& speed) {
-        return -speed * config::AIR_FRICTION;
+    inline sf::Vector2f computeAirFriction(const sf::Vector2f& velocity) {
+        return -velocity * config::AIR_FRICTION;
     }
 
-    inline sf::Vector2f computeMouseAttraction(const float mass, const sf::Vector2f& distance) {
-        return {0,0}; //TODO: Implement mouse attraction
+    inline sf::Vector2f computeMouseAttraction(const sf::Vector2f& distanceToMouse, const sf::Vector2f& velocity, const float mass) {
+        if (distanceToMouse.lengthSquared() > 400*400 || distanceToMouse.lengthSquared() == 0) return {0,0};
+
+        // F = k*d - c*v avec c=2sqrt(k*m) -> Amortissement critique
+        return config::MOUSE_ATTRACTION * distanceToMouse - 2.0f * std::sqrt(config::MOUSE_ATTRACTION * mass) * 0.5f * velocity;
     }
 
     inline sf::Vector2f computeCollisionImpulsion(
