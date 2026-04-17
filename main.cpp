@@ -6,9 +6,11 @@
 #include "src/entities/particle.h"
 #include "src/core/constants.h"
 #include "src/core/physics.h"
+#include "src/systems/grid.h"
 
 int main() {
     std::vector<std::unique_ptr<Particle>> particles;
+    std::unique_ptr<Grid> grid = std::make_unique<Grid>(100);
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<> dis(-200, 200);
@@ -45,30 +47,11 @@ int main() {
         window.clear();
 
         if (!particles.empty()) {
-            for (int i = 0; i < particles.size(); i++) {
-                for (int j = i + 1; j < particles.size(); j++) {
-                    const auto& particle_i = particles.at(i);
-                    const auto& particle_j = particles.at(j);
-
-                    const float distanceSquared = (particle_i->getPosition() - particle_j->getPosition()).lengthSquared();
-                    const float particleIJRadiusSquared = (particle_i->getShape().getRadius() + particle_j->getShape().getRadius()) * (particle_i->getShape().getRadius() + particle_j->getShape().getRadius());
-
-                    if (distanceSquared <= particleIJRadiusSquared) {
-                        if (distanceSquared == 0) continue;
-
-                        const auto collisionSpeed = forces::computeCollisionImpulsion(
-                            particle_i->getPosition() - particle_j->getPosition(),
-                            particle_i->getMass(),
-                            particle_i->getVelocity(),
-                            particle_j->getMass(),
-                            particle_j->getVelocity()
-                        );
-
-                        particle_i->setVelocity(particle_i->getVelocity() + collisionSpeed/particle_i->getMass());
-                        particle_j->setVelocity(particle_j->getVelocity() - collisionSpeed/particle_j->getMass());
-                    }
-                }
+            grid->clear();
+            for (const auto& particle : particles) {
+                grid->addParticle(particle.get());
             }
+            grid->computeCollision();
         }
 
         if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
