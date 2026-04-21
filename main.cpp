@@ -7,21 +7,27 @@
 #include "src/core/constants.h"
 #include "src/core/physics.h"
 #include "src/systems/grid.h"
+#include "imgui-SFML.h"
+#include "imgui.h"
 
 int main() {
     std::vector<std::unique_ptr<Particle>> particles;
-    std::unique_ptr<Grid> grid = std::make_unique<Grid>(100);
+    const auto grid = std::make_unique<Grid>(100);
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<> dis(-200, 200);
 
     sf::RenderWindow window(sf::VideoMode({config::WINDOW_WIDTH, config::WINDOW_HEIGHT}), config::WINDOW_TITLE);
+    if (!ImGui::SFML::Init(window))
+        return -1;
     sf::Clock clock;
 
     clock.start();
 
     while (window.isOpen()) {
         while (const std::optional event = window.pollEvent()) {
+
+            ImGui::SFML::ProcessEvent(window, *event);
 
             if (event->is<sf::Event::Closed>()) window.close();
 
@@ -42,7 +48,8 @@ int main() {
             }
         }
 
-        const float dt = clock.restart().asSeconds();
+        const sf::Time frameTime = clock.restart();
+        const float dt = frameTime.asSeconds();
 
         window.clear();
 
@@ -75,8 +82,17 @@ int main() {
             particle->update(dt);
         }
 
+        ImGui::SFML::Update(window, frameTime);
+
+        ImGui::Begin("Menu");
+        ImGui::Button("Look at this pretty button");
+        ImGui::End();
+
+        ImGui::SFML::Render(window);
         window.display();
     }
+
+    ImGui::SFML::Shutdown();
 
     return 0;
 }
