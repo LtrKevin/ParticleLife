@@ -66,6 +66,8 @@ add_executable(ParticleLife
         src/core/physics.h
         src/systems/grid.cpp
         src/systems/grid.h
+        src/systems/ui.cpp
+        src/systems/ui.h
 )
 
 # On lie SFML, ImGui-SFML, et notre nouvelle librairie imgui !

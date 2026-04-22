@@ -1,4 +1,3 @@
-#include <iostream>
 #include <random>
 #include <SFML/Graphics.hpp>
 
@@ -7,8 +6,8 @@
 #include "src/core/constants.h"
 #include "src/core/physics.h"
 #include "src/systems/grid.h"
+#include "src/systems/ui.h"
 #include "imgui-SFML.h"
-#include "imgui.h"
 
 int main() {
     std::vector<std::unique_ptr<Particle>> particles;
@@ -18,27 +17,21 @@ int main() {
     std::uniform_real_distribution<> dis(-200, 200);
 
     sf::RenderWindow window(sf::VideoMode({config::WINDOW_WIDTH, config::WINDOW_HEIGHT}), config::WINDOW_TITLE);
-    if (!ImGui::SFML::Init(window))
-        return -1;
     sf::Clock clock;
 
     clock.start();
 
+    UIManager uiManager(window);
+    if (!ImGui::SFML::Init(window)) return -1;
+
     while (window.isOpen()) {
         while (const std::optional event = window.pollEvent()) {
-
-            ImGui::SFML::ProcessEvent(window, *event);
+            uiManager.processEvents(window, *event);
 
             if (event->is<sf::Event::Closed>()) window.close();
 
             if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
-                if (keyPressed->code == sf::Keyboard::Key::G) {
-                    config::earthMode = !config::earthMode;
-                    std::cout << "Mode terre : " << config::earthMode << std::endl;
-                } else if (keyPressed->code == sf::Keyboard::Key::R) {
-                    std::cout << "Suppression des particules ..." << std::endl;
-                    particles.clear();
-                } else if (keyPressed->code == sf::Keyboard::Key::Space) {
+                if (keyPressed->code == sf::Keyboard::Key::Space) {
                     auto& particle = particles.emplace_back(std::make_unique<Particle>(sf::Vector2f(
                         sf::Mouse::getPosition(window)),
                         sf::Vector2f(dis(gen), dis(gen)),
@@ -74,25 +67,17 @@ int main() {
         for (const auto& particle : particles) {
             window.draw(particle->getShape());
 
-            if (config::earthMode) {
-                particle->applyForce(forces::computeGravity(particle->getMass()));
-                particle->applyForce(forces::computeAirFriction(particle->getVelocity()));
-            }
+            particle->applyForce(forces::computeGravity(particle->getMass()));
+            particle->applyForce(forces::computeAirFriction(particle->getVelocity()));
 
             particle->update(dt);
         }
 
-        ImGui::SFML::Update(window, frameTime);
+        uiManager.update(frameTime, particles, window);
+        uiManager.render(window);
 
-        ImGui::Begin("Menu");
-        ImGui::Button("Look at this pretty button");
-        ImGui::End();
-
-        ImGui::SFML::Render(window);
         window.display();
     }
-
-    ImGui::SFML::Shutdown();
 
     return 0;
 }

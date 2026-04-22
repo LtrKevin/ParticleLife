@@ -9,7 +9,7 @@
 
 namespace forces {
     inline sf::Vector2f computeGravity(const float mass) {
-        return {0, mass * config::GRAVITY};
+        return {0, mass * config::gravityPresets[config::currentPlanet].value};
     }
 
     inline sf::Vector2f computeAirFriction(const sf::Vector2f& velocity) {
