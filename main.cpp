@@ -15,6 +15,7 @@ int main() {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<> dis(-200, 200);
+    std::uniform_real_distribution<> radiusDis(5.0, 20.0);
 
     sf::RenderWindow window(sf::VideoMode({config::WINDOW_WIDTH, config::WINDOW_HEIGHT}), config::WINDOW_TITLE);
     sf::Clock clock;
@@ -35,7 +36,7 @@ int main() {
                     auto& particle = particles.emplace_back(std::make_unique<Particle>(sf::Vector2f(
                         sf::Mouse::getPosition(window)),
                         sf::Vector2f(dis(gen), dis(gen)),
-                        12.0
+                        radiusDis(gen)
                     ));
                 }
             }

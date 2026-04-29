@@ -13,7 +13,7 @@ Grid::Grid(const int cellSize) : cellSize_(cellSize){
 
 void Grid::computeCollision() {
     for (int i = 0; i < rows_ * columns_; i++) {
-        std::vector<Particle*> neighbours; // BOTTOM_LEFT, BOTTOM, BOTTOM_RIGHT, RIGHT
+        std::vector<Particle*> neighbours;
 
         const int column = i % columns_;
         const int row = (i - column) / columns_;
