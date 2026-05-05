@@ -9,7 +9,7 @@ public:
 
     sf::Vector2f getPosition() const;
     sf::Vector2f getVelocity() const;
-    sf::CircleShape getShape() const;
+    const sf::CircleShape& getShape() const;
     float getMass() const;
     void setVelocity(sf::Vector2f velocity);
 

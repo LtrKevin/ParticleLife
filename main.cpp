@@ -1,7 +1,6 @@
 #include <random>
 #include <SFML/Graphics.hpp>
 
-#include "cmake-build-debug/_deps/sfml-src/src/SFML/Window/InputImpl.hpp"
 #include "src/entities/particle.h"
 #include "src/core/constants.h"
 #include "src/core/physics.h"
@@ -23,7 +22,6 @@ int main() {
     clock.start();
 
     UIManager uiManager(window);
-    if (!ImGui::SFML::Init(window)) return -1;
 
     while (window.isOpen()) {
         while (const std::optional event = window.pollEvent()) {
@@ -66,12 +64,12 @@ int main() {
         }
 
         for (const auto& particle : particles) {
-            window.draw(particle->getShape());
-
             particle->applyForce(forces::computeGravity(particle->getMass()));
             particle->applyForce(forces::computeAirFriction(particle->getVelocity()));
 
             particle->update(dt);
+
+            window.draw(particle->getShape());
         }
 
         uiManager.update(frameTime, particles, window);

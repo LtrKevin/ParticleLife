@@ -62,7 +62,7 @@ sf::Vector2f Particle::getVelocity() const {
     return velocity_;
 }
 
-sf::CircleShape Particle::getShape() const {
+const sf::CircleShape& Particle::getShape() const {
     return shape_;
 }
 

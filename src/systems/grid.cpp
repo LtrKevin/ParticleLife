@@ -37,10 +37,10 @@ void Grid::computeCollision() {
 
         neighbours.insert(neighbours.end(), cells_[i].begin(), cells_[i].end());
 
-        for (int i = 0; i < neighbours.size(); i++) {
-            for (int j = i + 1; j < neighbours.size(); j++) {
-                const auto& particle_i = neighbours.at(i);
-                const auto& particle_j = neighbours.at(j);
+        for (int pi = 0; pi < neighbours.size(); pi++) {
+            for (int pj = pi + 1; pj < neighbours.size(); pj++) {
+                const auto& particle_i = neighbours.at(pi);
+                const auto& particle_j = neighbours.at(pj);
 
                 const float distanceSquared = (particle_i->getPosition() - particle_j->getPosition()).lengthSquared();
                 const float particleIJRadiusSquared = (particle_i->getShape().getRadius() + particle_j->getShape().getRadius()) * (particle_i->getShape().getRadius() + particle_j->getShape().getRadius());
