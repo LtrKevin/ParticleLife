@@ -39,6 +39,7 @@ add_library(imgui STATIC
         ${imgui_SOURCE_DIR}/imgui_tables.cpp
         ${imgui_SOURCE_DIR}/imgui_widgets.cpp
         ${imgui_SOURCE_DIR}/imgui_demo.cpp
+        src/core/utils.h
 )
 target_include_directories(imgui PUBLIC $<BUILD_INTERFACE:${imgui_SOURCE_DIR}>)
 add_library(imgui::imgui ALIAS imgui) # On crée l'alias exact attendu par ImGui-SFML
@@ -68,6 +69,11 @@ add_executable(ParticleLife
         src/systems/grid.h
         src/systems/ui.cpp
         src/systems/ui.h
+        src/core/integrator/integrator.h
+        src/core/integrator/eulerIntegrator.cpp
+        src/core/integrator/eulerIntegrator.h
+        src/core/integrator/verletIntegrator.cpp
+        src/core/integrator/verletIntegrator.h
 )
 
 # On lie SFML, ImGui-SFML, et notre nouvelle librairie imgui !

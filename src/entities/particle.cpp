@@ -15,7 +15,6 @@ Particle::Particle(
 
     mass_ = radius*radius;
     forceAccumulator_ = {0, 0};
-    previousAcceleration_ = {0, 0};
 }
 
 void Particle::applyForce(const sf::Vector2f force) {
@@ -23,13 +22,11 @@ void Particle::applyForce(const sf::Vector2f force) {
 }
 
 void Particle::update(const float dt) {
+    acceleration_ = forceAccumulator_ / mass_;
 
-    const sf::Vector2f acceleration = forceAccumulator_ / mass_; // Newton's second law
-
-    // Intégrateur de verlet
-    position_ = position_ + velocity_ * dt + 0.5f * previousAcceleration_ * dt * dt;
-    velocity_ = velocity_ + (acceleration + previousAcceleration_) * dt * 0.5f;
-    previousAcceleration_ = acceleration;
+    auto state = getState();
+    integrator_->integrate(state, dt);
+    setState(state);
 
     const float MIN_POSITION = 0 + shape_.getRadius();
     const float MAX_X_POSITION = config::WINDOW_WIDTH - shape_.getRadius();
@@ -72,4 +69,18 @@ const sf::CircleShape& Particle::getShape() const {
 
 float Particle::getMass() const {
     return mass_;
+}
+
+Utils::ParticleState Particle::getState() const {
+    return Utils::ParticleState{position_, velocity_, acceleration_};
+}
+
+void Particle::setState(const Utils::ParticleState &state) {
+    acceleration_ = state.acceleration;
+    velocity_ = state.velocity;
+    position_ = state.position;
+}
+
+void Particle::setIntegrator(std::unique_ptr<IIntegrator<Utils::ParticleState>> integrator) {
+    integrator_ = std::move(integrator);
 }

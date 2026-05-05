@@ -7,6 +7,8 @@
 #include "src/systems/grid.h"
 #include "src/systems/ui.h"
 #include "imgui-SFML.h"
+#include "src/core/integrator/eulerIntegrator.h"
+#include "src/core/integrator/verletIntegrator.h"
 
 int main() {
     std::vector<std::unique_ptr<Particle>> particles;
@@ -36,6 +38,8 @@ int main() {
                         sf::Vector2f(dis(gen), dis(gen)),
                         radiusDis(gen)
                     ));
+
+                    particle->setIntegrator(config::integratorPresets[config::currentIntegrator].integrator());
                 }
             }
         }
