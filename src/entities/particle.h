@@ -19,6 +19,7 @@ public:
 private:
     sf::Vector2f position_;
     sf::Vector2f velocity_;
+    sf::Vector2f previousAcceleration_;
     sf::CircleShape shape_;
     float mass_;
 

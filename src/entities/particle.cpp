@@ -15,6 +15,7 @@ Particle::Particle(
 
     mass_ = radius*radius;
     forceAccumulator_ = {0, 0};
+    previousAcceleration_ = {0, 0};
 }
 
 void Particle::applyForce(const sf::Vector2f force) {
@@ -24,8 +25,11 @@ void Particle::applyForce(const sf::Vector2f force) {
 void Particle::update(const float dt) {
 
     const sf::Vector2f acceleration = forceAccumulator_ / mass_; // Newton's second law
-    velocity_ += acceleration * dt;
-    position_ += velocity_ * dt;
+
+    // Intégrateur de verlet
+    position_ = position_ + velocity_ * dt + 0.5f * previousAcceleration_ * dt * dt;
+    velocity_ = velocity_ + (acceleration + previousAcceleration_) * dt * 0.5f;
+    previousAcceleration_ = acceleration;
 
     const float MIN_POSITION = 0 + shape_.getRadius();
     const float MAX_X_POSITION = config::WINDOW_WIDTH - shape_.getRadius();
