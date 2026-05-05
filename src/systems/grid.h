@@ -1,5 +1,4 @@
-#ifndef PARTICLELIFE_GRID_H
-#define PARTICLELIFE_GRID_H
+#pragma once
 
 #include <vector>
 #include "../entities/particle.h"
@@ -19,6 +18,3 @@ private:
     int cellSize_;
     std::vector<std::vector<Particle*>> cells_;
 };
-
-
-#endif //PARTICLELIFE_GRID_H

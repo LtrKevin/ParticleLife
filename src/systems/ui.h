@@ -1,12 +1,9 @@
-#ifndef PARTICLELIFE_UI_H
-#define PARTICLELIFE_UI_H
+#pragma once
 
 #include <SFML/Graphics.hpp>
-#include <SFML/Window/Event.hpp>
 #include <vector>
 #include <memory>
 #include "../entities/particle.h"
-#include "grid.h"
 
 class UIManager {
 public:
@@ -17,5 +14,3 @@ public:
     void processEvents(const sf::Window& window, const sf::Event& event);
     void render(sf::RenderWindow& window);
 };
-
-#endif //PARTICLELIFE_UI_H

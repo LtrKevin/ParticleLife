@@ -1,5 +1,4 @@
-#ifndef PARTICLELIFE_PARTICLE_H
-#define PARTICLELIFE_PARTICLE_H
+#pragma once
 
 #include <memory>
 
@@ -35,5 +34,3 @@ private:
     Utils::ParticleState getState() const;
     void setState(const Utils::ParticleState& state);
 };
-
-#endif //PARTICLELIFE_PARTICLE_H

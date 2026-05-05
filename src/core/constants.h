@@ -1,6 +1,3 @@
-#ifndef PARTICLELIFE_CONSTANTS_H
-#define PARTICLELIFE_CONSTANTS_H
-
 #pragma once
 
 #include <string>
@@ -50,5 +47,3 @@ namespace config {
     inline int currentPlanet = Earth;
     inline int currentIntegrator = Euler;
 }
-
-#endif //PARTICLELIFE_CONSTANTS_H

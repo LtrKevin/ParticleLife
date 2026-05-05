@@ -1,11 +1,8 @@
-#ifndef PARTICLELIFE_PHYSICS_H
-#define PARTICLELIFE_PHYSICS_H
+#pragma once
 
 #include <cmath>
 #include "SFML/System/Vector2.hpp"
 #include "constants.h"
-
-#pragma once
 
 namespace forces {
     inline sf::Vector2f computeGravity(const float mass) {
@@ -41,5 +38,3 @@ namespace forces {
         return impulsion * N;
     }
 }
-
-#endif //PARTICLELIFE_PHYSICS_H
