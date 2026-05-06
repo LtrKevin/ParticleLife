@@ -32,17 +32,23 @@ void Particle::update(const float dt) {
     const float MAX_X_POSITION = config::WINDOW_WIDTH - shape_.getRadius();
     const float MAX_Y_POSITION = config::WINDOW_HEIGHT - shape_.getRadius();
 
-    if (position_.x >= MAX_X_POSITION || position_.x <= MIN_POSITION) {
+    if (position_.x >= MAX_X_POSITION) {
         velocity_.x = -velocity_.x * config::RESTITUTION;
-
-        position_.x = position_.x < MIN_POSITION ? MIN_POSITION : MAX_X_POSITION;
+        position_.x = MAX_X_POSITION;
+    }
+    if (position_.x <= MIN_POSITION) {
+        velocity_.x = -velocity_.x * config::RESTITUTION;
+        position_.x = MIN_POSITION;
     }
 
-    if (position_.y >= MAX_Y_POSITION || position_.y <= MIN_POSITION) {
+    if (position_.y >= MAX_Y_POSITION) {
         velocity_.y = -velocity_.y * config::RESTITUTION;
-        velocity_.x > 0 ? velocity_.x -= config::SLIDE_FRICTION*dt: velocity_.x += config::SLIDE_FRICTION*dt;
-
-        position_.y = position_.y < MIN_POSITION ? MIN_POSITION : MAX_Y_POSITION;
+        velocity_.x > 0 ? velocity_.x -= config::SLIDE_FRICTION * dt : velocity_.x += config::SLIDE_FRICTION * dt;
+        position_.y = MAX_Y_POSITION;
+    }
+    if (position_.y <= MIN_POSITION) {
+        velocity_.y = -velocity_.y * config::RESTITUTION;
+        position_.y = MIN_POSITION;
     }
 
     if (std::abs(velocity_.x) < config::VELOCITY_X_THRESHOLD) velocity_.x = 0.0f;
@@ -53,6 +59,15 @@ void Particle::update(const float dt) {
 
 void Particle::setVelocity(const sf::Vector2f velocity) {
     velocity_ = velocity;
+}
+
+void Particle::setPosition(const sf::Vector2f position) {
+    const float min = shape_.getRadius();
+    const float maxX = config::WINDOW_WIDTH - shape_.getRadius();
+    const float maxY = config::WINDOW_HEIGHT - shape_.getRadius();
+
+    position_.x = std::clamp(position.x, min, maxX);
+    position_.y = std::clamp(position.y, min, maxY);
 }
 
 sf::Vector2f Particle::getPosition() const {

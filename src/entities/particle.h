@@ -17,6 +17,7 @@ public:
     float getMass() const;
 
     void setVelocity(sf::Vector2f velocity);
+    void setPosition(sf::Vector2f position);
     void setIntegrator(std::unique_ptr<IIntegrator<Utils::ParticleState>> integrator);
 
     void update(float dt);

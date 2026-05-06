@@ -48,6 +48,17 @@ void Grid::computeCollision() {
                 if (distanceSquared <= particleIJRadiusSquared) {
                     if (distanceSquared == 0) continue;
 
+                    const float distance = std::sqrt(distanceSquared);
+                    const float radius_i = particle_i->getShape().getRadius();
+                    const float radius_j = particle_j->getShape().getRadius();
+                    const float overlap = (radius_i + radius_j) - distance;
+
+                    const sf::Vector2f normal = (particle_i->getPosition() - particle_j->getPosition()) / distance;
+                    const float totalMass = particle_i->getMass() + particle_j->getMass();
+
+                    particle_i->setPosition(particle_i->getPosition() + normal * overlap * (particle_j->getMass() / totalMass));
+                    particle_j->setPosition(particle_j->getPosition() - normal * overlap * (particle_i->getMass() / totalMass));
+
                     const auto collisionSpeed = forces::computeCollisionImpulsion(
                         particle_i->getPosition() - particle_j->getPosition(),
                         particle_i->getMass(),
@@ -58,6 +69,8 @@ void Grid::computeCollision() {
 
                     particle_i->setVelocity(particle_i->getVelocity() + collisionSpeed/particle_i->getMass());
                     particle_j->setVelocity(particle_j->getVelocity() - collisionSpeed/particle_j->getMass());
+
+
                 }
             }
         }
