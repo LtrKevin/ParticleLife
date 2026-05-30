@@ -74,6 +74,8 @@ add_executable(ParticleLife
         src/core/integrator/eulerIntegrator.h
         src/core/integrator/verletIntegrator.cpp
         src/core/integrator/verletIntegrator.h
+        src/core/threadPool.cpp
+        src/core/threadPool.h
 )
 
 # On lie SFML, ImGui-SFML, et notre nouvelle librairie imgui !

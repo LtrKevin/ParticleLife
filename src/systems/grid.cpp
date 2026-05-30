@@ -4,7 +4,7 @@
 #include "../core/constants.h"
 #include "../core/physics.h"
 
-Grid::Grid(const int cellSize) : cellSize_(cellSize){
+Grid::Grid(const int cellSize, const int numThreads) : cellSize_(cellSize), threadPool_(numThreads){
     rows_ = static_cast<int>(floor(config::WINDOW_HEIGHT/cellSize_));
     columns_ = static_cast<int>(floor(config::WINDOW_WIDTH/cellSize_));
 
@@ -12,11 +12,11 @@ Grid::Grid(const int cellSize) : cellSize_(cellSize){
 }
 
 void Grid::computeCollision() {
-    for (int i = 0; i < rows_ * columns_; i++) {
+    for (int row = 0; row < rows_; row++) {
+        threadPool_.submit([this, row] {
+        for (int column = 0; column < columns_; column++) {
+        const int i = row * columns_ + column;
         std::vector<Particle*> neighbours;
-
-        const int column = i % columns_;
-        const int row = (i - column) / columns_;
 
         if (row < rows_ - 1) {
             neighbours.insert(neighbours.end(), cells_[i + columns_].begin(), cells_[i + columns_].end());
@@ -76,7 +76,10 @@ void Grid::computeCollision() {
         }
 
         neighbours.clear();
+        } // fin du for column
+        }); // fin du submit
     }
+    threadPool_.wait();
 }
 
 void Grid::addParticle(Particle* p){
